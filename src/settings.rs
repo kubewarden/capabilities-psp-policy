@@ -24,7 +24,7 @@ impl chimera_kube_policy_sdk::settings::Validatable for Settings {
         let denied: HashSet<String> = self
             .allowed_capabilities
             .intersection(&self.required_drop_capabilities)
-            .map(|v| v.clone())
+            .cloned()
             .collect();
         if !denied.is_empty() {
             return Err(format!("These capabilities cannot be allowed because they are also required to be dropped: {:?}", denied));
@@ -33,7 +33,7 @@ impl chimera_kube_policy_sdk::settings::Validatable for Settings {
         let denied: HashSet<String> = self
             .default_add_capabilities
             .intersection(&self.required_drop_capabilities)
-            .map(|v| v.clone())
+            .cloned()
             .collect();
         if !denied.is_empty() {
             return Err(format!("These capabilities cannot be added by default because they are also required to be dropped: {:?}", denied));
@@ -42,7 +42,7 @@ impl chimera_kube_policy_sdk::settings::Validatable for Settings {
         let denied: HashSet<String> = self
             .default_add_capabilities
             .difference(&self.allowed_capabilities)
-            .map(|v| v.clone())
+            .cloned()
             .collect();
         if !denied.is_empty() && !self.allow_all_capabilities_enabled() {
             return Err(format!(

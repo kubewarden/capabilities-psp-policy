@@ -1,7 +1,7 @@
 use anyhow::{anyhow, Result};
 use chimera_kube_policy_sdk::request::ValidationRequest;
 use k8s_openapi::api::core::v1::{Capabilities, Pod, SecurityContext};
-use std::{collections::HashSet, iter::FromIterator};
+use std::collections::HashSet;
 
 use crate::settings::Settings;
 
@@ -79,10 +79,10 @@ fn patch_container_security_context(
     let mut capabilities = sc.capabilities.unwrap();
 
     // Handle add capabilities
-    let mut cap_add = capabilities.add.unwrap_or(Vec::<String>::new());
+    let mut cap_add = capabilities.add.unwrap_or_default();
     let cap_add_size_before = cap_add.len();
 
-    let current_add: HashSet<String> = HashSet::from_iter(cap_add.iter().map(|i| i.to_owned()));
+    let current_add: HashSet<String> = cap_add.iter().map(|i| i.to_owned()).collect();
     for to_be_added in settings.default_add_capabilities.difference(&current_add) {
         cap_add.push(String::from(to_be_added));
     }
@@ -97,11 +97,10 @@ fn patch_container_security_context(
     capabilities.add = Some(cap_add);
 
     // Handle add capabilities
-    let mut cap_drop = capabilities.drop.unwrap_or(Vec::<String>::new());
+    let mut cap_drop = capabilities.drop.unwrap_or_default();
     let cap_drop_size_before = cap_drop.len();
 
-    let current_drop: HashSet<String> =
-        HashSet::from_iter(cap_drop.iter().map(|i| String::from(i)));
+    let current_drop: HashSet<String> = cap_drop.iter().map(String::from).collect();
     for to_be_droped in settings
         .required_drop_capabilities
         .difference(&current_drop)

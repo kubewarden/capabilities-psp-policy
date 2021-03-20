@@ -45,7 +45,7 @@ pub(crate) fn validate_added_caps(validation_req: &ValidationRequest<Settings>) 
 }
 
 fn get_caps(
-    queries: &Vec<&str>,
+    queries: &[&str],
     validation_req: &ValidationRequest<Settings>,
 ) -> Result<HashSet<String>> {
     let mut selector = jsonpath::selector_as::<HashSet<String>>(&validation_req.request.object);
@@ -54,8 +54,9 @@ fn get_caps(
 
     for q in queries.iter() {
         let matches = selector(q)
-            .and_then(|mut m| Ok(m.pop().unwrap_or(HashSet::<String>::new())))
+            .map(|mut m| m.pop().unwrap_or_default())
             .map_err(|e| anyhow!("error searching capabilities with query {}: {:?}", q, e))?;
+
         caps = caps.union(&matches).map(|i| i.to_owned()).collect();
     }
 

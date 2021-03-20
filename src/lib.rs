@@ -23,12 +23,10 @@ pub extern "C" fn wapc_init() {
 fn validate(payload: &[u8]) -> CallResult {
     let validation_req = ValidationRequest::<Settings>::new(payload)?;
 
-    let val_res = validate_added_caps(&validation_req);
-    if val_res.is_err() {
-        return reject_request(Some(val_res.unwrap_err().to_string()), None);
+    match validate_added_caps(&validation_req) {
+        Ok(()) => accept_request(patch_object(&validation_req)?),
+        Err(val_res) => reject_request(Some(val_res.to_string()), None),
     }
-
-    accept_request(patch_object(&validation_req)?)
 }
 
 #[cfg(test)]
