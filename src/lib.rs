@@ -76,7 +76,47 @@ mod tests {
     }
 
     #[test]
-    fn do_mutations() -> Result<()> {
+    fn do_mutations_when_security_context_does_not_exist() -> Result<()> {
+        // this request has NET_ADMIN and SYS_TIME already added to the main container.
+        // The sidecar container has no capability added.
+        // No capability is dropped by the containers
+        let request_file = "test_data/req_pod_without_security_context.json";
+        let tests = vec![
+            Testcase {
+                name: String::from("grow drop capabilities"),
+                fixture_file: String::from(request_file),
+                settings: configuration!(
+                allowed_capabilities: "NET_ADMIN,SYS_TIME",
+                required_drop_capabilities: "SYS_PTRACE",
+                default_add_capabilities: ""),
+                expected_validation_result: true,
+            },
+            Testcase {
+                name: String::from("grow add capabilities"),
+                fixture_file: String::from(request_file),
+                settings: configuration!(
+                allowed_capabilities: "NET_ADMIN,SYS_TIME,KILL",
+                required_drop_capabilities: "",
+                default_add_capabilities: "NET_ADMIN,SYS_TIME"),
+                expected_validation_result: true,
+            },
+        ];
+
+        for tc in tests.iter() {
+            let res = tc.eval(validate)?;
+            assert!(
+                res.mutated_object.is_some(),
+                "No mutation found with test case: {}",
+                tc.name,
+            );
+            println!("mutated: {:?}", res.mutated_object);
+        }
+
+        Ok(())
+    }
+
+    #[test]
+    fn do_mutations_when_security_context_exists() -> Result<()> {
         // this request has NET_ADMIN and SYS_TIME already added to the main container.
         // The sidecar container has no capability added.
         // No capability is dropped by the containers
