@@ -19,7 +19,7 @@ impl Settings {
     }
 }
 
-impl chimera_kube_policy_sdk::settings::Validatable for Settings {
+impl kubewarden_policy_sdk::settings::Validatable for Settings {
     fn validate(&self) -> Result<(), String> {
         let denied: HashSet<String> = self
             .allowed_capabilities
@@ -60,7 +60,7 @@ mod tests {
     use super::*;
     use anyhow::Result;
 
-    use chimera_kube_policy_sdk::settings::Validatable;
+    use kubewarden_policy_sdk::settings::Validatable;
     use test_helpers::configuration;
 
     #[test]

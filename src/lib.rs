@@ -10,8 +10,8 @@ use mutate::patch_object;
 mod settings;
 use settings::Settings;
 
-use chimera_kube_policy_sdk::{
-    accept_request, reject_request, request::ValidationRequest, validate_settings,
+use kubewarden_policy_sdk::{
+    accept_request, mutate_request, reject_request, request::ValidationRequest, validate_settings,
 };
 
 #[no_mangle]
@@ -24,7 +24,13 @@ fn validate(payload: &[u8]) -> CallResult {
     let validation_req = ValidationRequest::<Settings>::new(payload)?;
 
     match validate_added_caps(&validation_req) {
-        Ok(()) => accept_request(patch_object(&validation_req)?),
+        Ok(()) => {
+            if let Some(patched_object) = patch_object(&validation_req)? {
+                mutate_request(&patched_object)
+            } else {
+                accept_request()
+            }
+        }
         Err(val_res) => reject_request(Some(val_res.to_string()), None),
     }
 }
@@ -34,7 +40,7 @@ mod tests {
     use super::*;
     use anyhow::Result;
 
-    use chimera_kube_policy_sdk::test::Testcase;
+    use kubewarden_policy_sdk::test::Testcase;
     use test_helpers::configuration;
 
     #[test]
