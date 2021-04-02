@@ -1,6 +1,6 @@
 use anyhow::{anyhow, Result};
-use chimera_kube_policy_sdk::request::ValidationRequest;
 use k8s_openapi::api::core::v1::{Capabilities, Pod, SecurityContext};
+use kubewarden_policy_sdk::request::ValidationRequest;
 use std::collections::HashSet;
 
 use crate::settings::Settings;

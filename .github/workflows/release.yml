@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       WASM_BINARY_NAME: psp_capabilities
-      OCI_TARGET: ghcr.io/chimera-kube/policies/psp-capabilities
+      OCI_TARGET: ghcr.io/kubewarden/policies/psp-capabilities
     steps:
       -
         name: Checkout code

@@ -5,7 +5,7 @@ use crate::settings::Settings;
 
 use jsonpath_lib as jsonpath;
 
-use chimera_kube_policy_sdk::request::ValidationRequest;
+use kubewarden_policy_sdk::request::ValidationRequest;
 
 pub(crate) fn validate_added_caps(validation_req: &ValidationRequest<Settings>) -> Result<()> {
     let add_queries = vec![

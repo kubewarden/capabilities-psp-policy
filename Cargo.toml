@@ -1,6 +1,6 @@
 [package]
 name = "psp-capabilities"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Flavio Castelli <fcastelli@suse.com>"]
 edition = "2018"
 
@@ -9,12 +9,11 @@ crate-type = ["cdylib"]
 
 [dependencies]
 anyhow = "1.0"
-jmespatch = "0.3.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 wapc-guest = "0.4.0"
 jsonpath_lib = "0.2.6"
-chimera-kube-policy-sdk = { git = "https://github.com/chimera-kube/policy-sdk-rust.git", branch = "main" }
+kubewarden-policy-sdk = "0.1.0"
 k8s-openapi = { version = "0.11.0", features = ["v1_20"] }
 
 [dev-dependencies]

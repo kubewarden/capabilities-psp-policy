@@ -67,18 +67,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
-name = "chimera-kube-policy-sdk"
-version = "0.1.0"
-source = "git+https://github.com/chimera-kube/policy-sdk-rust.git?branch=main#4d6b1cc8f574698f1b4765adaac8d5a6c48ffa2e"
-dependencies = [
- "anyhow",
- "jmespatch",
- "serde",
- "serde_json",
- "wapc-guest",
-]
-
-[[package]]
 name = "chrono"
 version = "0.4.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -91,12 +79,6 @@ dependencies = [
  "time",
  "winapi",
 ]
-
-[[package]]
-name = "deunicode"
-version = "0.4.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "850878694b7933ca4c9569d30a34b55031b9b139ee1fc7b94a527c4ef960d690"
 
 [[package]]
 name = "env_logger"
@@ -190,18 +172,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dd25036021b0de88a0aff6b850051563c6516d0bf53f8638938edbb9de732736"
 
 [[package]]
-name = "jmespatch"
-version = "0.3.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7acf91a732ade34d8eda2dee9500a051833f14f0d3d10d77c149845d6ac6a5f0"
-dependencies = [
- "lazy_static",
- "serde",
- "serde_json",
- "slug",
-]
-
-[[package]]
 name = "jsonpath_lib"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -229,6 +199,19 @@ dependencies = [
  "serde-value",
  "serde_json",
  "url",
+]
+
+[[package]]
+name = "kubewarden-policy-sdk"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f90cc0916297663741bb45b0b90bdb5cdb7645958bbcbca98f8ff665b40651a1"
+dependencies = [
+ "anyhow",
+ "k8s-openapi",
+ "serde",
+ "serde_json",
+ "wapc-guest",
 ]
 
 [[package]]
@@ -309,14 +292,13 @@ dependencies = [
 
 [[package]]
 name = "psp-capabilities"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "assert-json-diff",
- "chimera-kube-policy-sdk",
- "jmespatch",
  "jsonpath_lib",
  "k8s-openapi",
+ "kubewarden-policy-sdk",
  "serde",
  "serde_json",
  "test_helpers",
@@ -401,15 +383,6 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
-]
-
-[[package]]
-name = "slug"
-version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b3bc762e6a4b6c6fcaade73e77f9ebc6991b676f88bb2358bddb56560f073373"
-dependencies = [
- "deunicode",
 ]
 
 [[package]]
