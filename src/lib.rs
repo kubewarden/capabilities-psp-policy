@@ -26,7 +26,7 @@ fn validate(payload: &[u8]) -> CallResult {
     match validate_added_caps(&validation_req) {
         Ok(()) => {
             if let Some(patched_object) = patch_object(&validation_req)? {
-                mutate_request(&patched_object)
+                mutate_request(patched_object)
             } else {
                 accept_request()
             }
