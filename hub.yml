@@ -11,7 +11,7 @@ keywords:
   - PSP
   - Container
   - Capability
-  - Capabilies
+  - Capabilities
 resources:
   - Pod
 mutation: true
