@@ -160,4 +160,29 @@ mod tests {
 
         Ok(())
     }
+
+    #[test]
+    fn ensure_failure_on_unwrap_does_not_happen_anymore() -> Result<()> {
+        // This request was found in production, it caused the policy to
+        // panic on unwrap
+        let request_file = "test_data/panic.json";
+        let tc = Testcase {
+            name: String::from("enforce"),
+            fixture_file: String::from(request_file),
+            settings: configuration!(
+                allowed_capabilities: "NET_ADMIN,SYS_TIME,KILL",
+                required_drop_capabilities: "",
+                default_add_capabilities: "NET_ADMIN,SYS_TIME"),
+            expected_validation_result: true,
+        };
+
+        let res = tc.eval(validate)?;
+        assert!(
+            res.mutated_object.is_some(),
+            "No mutation found with test case: {}",
+            tc.name,
+        );
+
+        Ok(())
+    }
 }

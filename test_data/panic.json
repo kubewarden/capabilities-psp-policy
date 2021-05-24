@@ -1,0 +1,312 @@
+{
+  "uid": "8756e33a-c52d-4307-ab43-cb7875cc3f4c",
+  "kind": {
+    "group": "",
+    "version": "v1",
+    "kind": "Pod"
+  },
+  "resource": {
+    "group": "",
+    "version": "v1",
+    "resource": "pods"
+  },
+  "requestKind": {
+    "group": "",
+    "version": "v1",
+    "kind": "Pod"
+  },
+  "requestResource": {
+    "group": "",
+    "version": "v1",
+    "resource": "pods"
+  },
+  "namespace": "kubewarden",
+  "operation": "CREATE",
+  "userInfo": {
+    "username": "system:serviceaccount:kube-system:replicaset-controller",
+    "uid": "bfb02fb4-9f6e-4af8-ba9c-0c1a21d83a6a",
+    "groups": [
+      "system:serviceaccounts",
+      "system:serviceaccounts:kube-system",
+      "system:authenticated"
+    ]
+  },
+  "object": {
+    "kind": "Pod",
+    "apiVersion": "v1",
+    "metadata": {
+      "generateName": "kubewarden-controller-767df6d6b-",
+      "creationTimestamp": null,
+      "labels": {
+        "app.kubernetes.io/instance": "kubewarden-controller",
+        "app.kubernetes.io/name": "kubewarden-controller",
+        "pod-template-hash": "767df6d6b"
+      },
+      "ownerReferences": [
+        {
+          "apiVersion": "apps/v1",
+          "kind": "ReplicaSet",
+          "name": "kubewarden-controller-767df6d6b",
+          "uid": "09ca8d9d-03a4-42e4-940d-f1b9c86ac6a2",
+          "controller": true,
+          "blockOwnerDeletion": true
+        }
+      ],
+      "managedFields": [
+        {
+          "manager": "kube-controller-manager",
+          "operation": "Update",
+          "apiVersion": "v1",
+          "time": "2021-05-24T08:04:47Z",
+          "fieldsType": "FieldsV1",
+          "fieldsV1": {
+            "f:metadata": {
+              "f:generateName": {},
+              "f:labels": {
+                ".": {},
+                "f:app.kubernetes.io/instance": {},
+                "f:app.kubernetes.io/name": {},
+                "f:pod-template-hash": {}
+              },
+              "f:ownerReferences": {
+                ".": {},
+                "k:{\\\"uid\\\":\\\"09ca8d9d-03a4-42e4-940d-f1b9c86ac6a2\\\"}": {
+                  ".": {},
+                  "f:apiVersion": {},
+                  "f:blockOwnerDeletion": {},
+                  "f:controller": {},
+                  "f:kind": {},
+                  "f:name": {},
+                  "f:uid": {}
+                }
+              }
+            },
+            "f:spec": {
+              "f:containers": {
+                "k:{\\\"name\\\":\\\"kube-rbac-proxy\\\"}": {
+                  ".": {},
+                  "f:args": {},
+                  "f:image": {},
+                  "f:imagePullPolicy": {},
+                  "f:name": {},
+                  "f:ports": {
+                    ".": {},
+                    "k:{\\\"containerPort\\\":8443,\\\"protocol\\\":\\\"TCP\\\"}": {
+                      ".": {},
+                      "f:containerPort": {},
+                      "f:name": {},
+                      "f:protocol": {}
+                    }
+                  },
+                  "f:resources": {},
+                  "f:terminationMessagePath": {},
+                  "f:terminationMessagePolicy": {}
+                },
+                "k:{\\\"name\\\":\\\"manager\\\"}": {
+                  ".": {},
+                  "f:args": {},
+                  "f:command": {},
+                  "f:image": {},
+                  "f:imagePullPolicy": {},
+                  "f:livenessProbe": {
+                    ".": {},
+                    "f:failureThreshold": {},
+                    "f:httpGet": {
+                      ".": {},
+                      "f:path": {},
+                      "f:port": {},
+                      "f:scheme": {}
+                    },
+                    "f:initialDelaySeconds": {},
+                    "f:periodSeconds": {},
+                    "f:successThreshold": {},
+                    "f:timeoutSeconds": {}
+                  },
+                  "f:name": {},
+                  "f:readinessProbe": {
+                    ".": {},
+                    "f:failureThreshold": {},
+                    "f:httpGet": {
+                      ".": {},
+                      "f:path": {},
+                      "f:port": {},
+                      "f:scheme": {}
+                    },
+                    "f:initialDelaySeconds": {},
+                    "f:periodSeconds": {},
+                    "f:successThreshold": {},
+                    "f:timeoutSeconds": {}
+                  },
+                  "f:resources": {
+                    ".": {},
+                    "f:limits": {
+                      ".": {},
+                      "f:cpu": {},
+                      "f:memory": {}
+                    },
+                    "f:requests": {
+                      ".": {},
+                      "f:cpu": {},
+                      "f:memory": {}
+                    }
+                  },
+                  "f:securityContext": {
+                    ".": {},
+                    "f:allowPrivilegeEscalation": {}
+                  },
+                  "f:terminationMessagePath": {},
+                  "f:terminationMessagePolicy": {}
+                }
+              },
+              "f:dnsPolicy": {},
+              "f:enableServiceLinks": {},
+              "f:restartPolicy": {},
+              "f:schedulerName": {},
+              "f:securityContext": {
+                ".": {},
+                "f:runAsNonRoot": {}
+              },
+              "f:serviceAccount": {},
+              "f:serviceAccountName": {},
+              "f:terminationGracePeriodSeconds": {}
+            }
+          }
+        }
+      ]
+    },
+    "spec": {
+      "volumes": [
+        {
+          "name": "kubewarden-controller-token-27htj",
+          "secret": {
+            "secretName": "kubewarden-controller-token-27htj"
+          }
+        }
+      ],
+      "containers": [
+        {
+          "name": "kube-rbac-proxy",
+          "image": "gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0",
+          "args": [
+            "--secure-listen-address=0.0.0.0:8443",
+            "--upstream=http://127.0.0.1:8080/",
+            "--logtostderr=true",
+            "--v=10"
+          ],
+          "ports": [
+            {
+              "name": "https",
+              "containerPort": 8443,
+              "protocol": "TCP"
+            }
+          ],
+          "resources": {},
+          "volumeMounts": [
+            {
+              "name": "kubewarden-controller-token-27htj",
+              "readOnly": true,
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount"
+            }
+          ],
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "imagePullPolicy": "IfNotPresent"
+        },
+        {
+          "name": "manager",
+          "image": "registry-testing.svc.lan/kubewarden-controller:v0.2.0",
+          "command": [
+            "/manager"
+          ],
+          "args": [
+            "--health-probe-bind-address=:8081",
+            "--metrics-bind-address=127.0.0.1:8080",
+            "--leader-elect",
+            "--deployments-namespace=kubewarden",
+            "--deployments-service-account-name=policy-server"
+          ],
+          "resources": {
+            "limits": {
+              "cpu": "100m",
+              "memory": "30Mi"
+            },
+            "requests": {
+              "cpu": "100m",
+              "memory": "20Mi"
+            }
+          },
+          "volumeMounts": [
+            {
+              "name": "kubewarden-controller-token-27htj",
+              "readOnly": true,
+              "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount"
+            }
+          ],
+          "livenessProbe": {
+            "httpGet": {
+              "path": "/healthz",
+              "port": 8081,
+              "scheme": "HTTP"
+            },
+            "initialDelaySeconds": 15,
+            "timeoutSeconds": 1,
+            "periodSeconds": 20,
+            "successThreshold": 1,
+            "failureThreshold": 3
+          },
+          "readinessProbe": {
+            "httpGet": {
+              "path": "/readyz",
+              "port": 8081,
+              "scheme": "HTTP"
+            },
+            "initialDelaySeconds": 5,
+            "timeoutSeconds": 1,
+            "periodSeconds": 10,
+            "successThreshold": 1,
+            "failureThreshold": 3
+          },
+          "terminationMessagePath": "/dev/termination-log",
+          "terminationMessagePolicy": "File",
+          "imagePullPolicy": "IfNotPresent",
+          "securityContext": {
+            "allowPrivilegeEscalation": false
+          }
+        }
+      ],
+      "restartPolicy": "Always",
+      "terminationGracePeriodSeconds": 10,
+      "dnsPolicy": "ClusterFirst",
+      "serviceAccountName": "kubewarden-controller",
+      "serviceAccount": "kubewarden-controller",
+      "securityContext": {
+        "runAsNonRoot": true
+      },
+      "schedulerName": "default-scheduler",
+      "tolerations": [
+        {
+          "key": "node.kubernetes.io/not-ready",
+          "operator": "Exists",
+          "effect": "NoExecute",
+          "tolerationSeconds": 300
+        },
+        {
+          "key": "node.kubernetes.io/unreachable",
+          "operator": "Exists",
+          "effect": "NoExecute",
+          "tolerationSeconds": 300
+        }
+      ],
+      "priority": 0,
+      "enableServiceLinks": true,
+      "preemptionPolicy": "PreemptLowerPriority"
+    },
+    "status": {}
+  },
+  "oldObject": null,
+  "dryRun": false,
+  "options": {
+    "kind": "CreateOptions",
+    "apiVersion": "meta.k8s.io/v1"
+  }
+}

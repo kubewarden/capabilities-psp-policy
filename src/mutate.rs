@@ -76,7 +76,7 @@ fn patch_container_security_context(
         windows_options: None,
     });
 
-    let mut capabilities = sc.capabilities.unwrap();
+    let mut capabilities = sc.capabilities.unwrap_or_default();
 
     // Handle add capabilities
     let mut cap_add = capabilities.add.unwrap_or_default();
@@ -302,6 +302,64 @@ mod tests {
                         "name": "sec-ctx-4",
                         "image": "gcr.io/google-samples/node-hello:1.0",
                         "securityContext": {
+                           "capabilities": {
+                              "add": ["KILL", "SYS_TIME"],
+                              "drop": ["BPF"]
+                           }
+                        }
+                    }
+               ]
+            }
+        });
+
+        test_mutate(payload, expected)
+    }
+
+    #[test]
+    fn handle_security_context_without_capabilities() -> Result<()> {
+        let settings = configuration!(
+            allowed_capabilities: "NET_ADMIN,SYS_TIME,KILL",
+            required_drop_capabilities: "BPF",
+            default_add_capabilities: "KILL,SYS_TIME"
+        );
+
+        let payload = json!({
+            "settings": json!(settings),
+            "request": {
+                "object": {
+                    "apiVersion": "v1",
+                    "kind": "Pod",
+                    "metadata": {
+                       "name": "security-context-demo-4"
+                    },
+                    "spec": {
+                       "containers": [
+                            {
+                                "name": "sec-ctx-4",
+                                "image": "gcr.io/google-samples/node-hello:1.0",
+                                "securityContext": {
+                                    "allowPrivilegeEscalation": false
+                                }
+                            }
+                       ]
+                    }
+                }
+            }
+        });
+
+        let expected = json!({
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+               "name": "security-context-demo-4"
+            },
+            "spec": {
+               "containers": [
+                    {
+                        "name": "sec-ctx-4",
+                        "image": "gcr.io/google-samples/node-hello:1.0",
+                        "securityContext": {
+                           "allowPrivilegeEscalation": false,
                            "capabilities": {
                               "add": ["KILL", "SYS_TIME"],
                               "drop": ["BPF"]
