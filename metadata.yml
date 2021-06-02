@@ -1,0 +1,23 @@
+rules:
+- apiGroups: [""]
+  apiVersions: ["v1"]
+  resources: ["pods"]
+  operations: ["CREATE"]
+mutating: true
+annotations:
+  io.kubewarden.policy.title: psp-capabilities
+  io.kubewarden.policy.description: Replacement for the Kubernetes Pod Security Policy that controls the usage of capabilities
+  io.kubewarden.policy.author: Flavio Castelli
+  io.kubewarden.policy.url: https://github.com/kubewarden/psp-capabilities
+  io.kubewarden.policy.source: https://github.com/kubewarden/psp-capabilities
+  io.kubewarden.policy.license: Apache-2.0
+  io.kubewarden.policy.usage: |
+    This policy works by defining several lists of capabilities. Capabilities are specified as named in `ALL_CAPS`, but without the `CAP_` prefix.
+
+    The following setting keys are accepted for this policy:
+
+    * `allowed_capabilities`: provides a list of capabilities that are allowed to be added to a container. The default set of capabilities are implicitly allowed. The empty set means that no additional capabilities may be added beyond the default set. `*` can be used to allow all capabilities.
+    * `required_drop_capabilities`: the capabilities which must be dropped from containers. These capabilities are removed from the default set, and must not be added. Capabilities listed in `required_drop_capabilities` must not be included in `allowed_capabilities` or `default_add_capabilities`.
+    * `default_add_capabilities`: the capabilities which are added to containers by default, in addition to the runtime defaults. See the documentation of your Container Runtime for the default list of capabilities.
+
+    The policy validates Pods at creation time and can also mutate them when either the `required_drop_capabilities` or the `default_add_capabilities` values are specified.
