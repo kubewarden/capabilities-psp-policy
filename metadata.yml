@@ -4,6 +4,7 @@ rules:
   resources: ["pods"]
   operations: ["CREATE"]
 mutating: true
+contextAware: false
 annotations:
   io.kubewarden.policy.title: psp-capabilities
   io.kubewarden.policy.description: Replacement for the Kubernetes Pod Security Policy that controls the usage of capabilities
