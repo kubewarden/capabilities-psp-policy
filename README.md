@@ -75,7 +75,7 @@ spec:
         - NET_ADMIN
 ```
 
-## Allow only approved capbilities to be added
+## Allow only approved capabilities to be added
 
 This configuration allows only approved capabilities to be
 added to containers:
