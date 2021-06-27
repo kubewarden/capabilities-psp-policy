@@ -11,9 +11,11 @@ mod settings;
 use settings::Settings;
 
 use kubewarden_policy_sdk::{
-    accept_request, mutate_request, protocol_version_guest, reject_request,
+    accept_request, logging, mutate_request, protocol_version_guest, reject_request,
     request::ValidationRequest, validate_settings,
 };
+
+use slog::{info, o, Drain, Logger};
 
 #[no_mangle]
 pub extern "C" fn wapc_init() {
@@ -23,9 +25,15 @@ pub extern "C" fn wapc_init() {
 }
 
 fn validate(payload: &[u8]) -> CallResult {
+    let drain = logging::KubewardenDrain::new().fuse();
+    let log = Logger::root(drain, o!("logger_key1" => "logger_value1"));
+    info!(log, "just a message");
+    info!(log, "{} at work", "interpolation");
+    info!(log, "structured log"; "string_val" => "string", "number" => 42, "enabled" => true);
+
     let validation_req = ValidationRequest::<Settings>::new(payload)?;
 
-    match validate_added_caps(&validation_req) {
+    match validate_added_caps(&log, &validation_req) {
         Ok(()) => {
             if let Some(patched_object) = patch_object(&validation_req)? {
                 mutate_request(patched_object)

@@ -1,4 +1,5 @@
 use anyhow::{anyhow, Result};
+use slog::{info, Logger};
 use std::collections::HashSet;
 
 use crate::settings::Settings;
@@ -7,7 +8,12 @@ use jsonpath_lib as jsonpath;
 
 use kubewarden_policy_sdk::request::ValidationRequest;
 
-pub(crate) fn validate_added_caps(validation_req: &ValidationRequest<Settings>) -> Result<()> {
+pub(crate) fn validate_added_caps(
+    log: &Logger,
+    validation_req: &ValidationRequest<Settings>,
+) -> Result<()> {
+    info!(log, "inner structured message"; "hello" => "world");
+
     let add_queries = vec![
         "$.spec.containers[*].securityContext.capabilities.add",
         "$.spec.initContainers[*].securityContext.capabilities.add",
