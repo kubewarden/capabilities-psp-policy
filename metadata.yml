@@ -9,8 +9,8 @@ annotations:
   io.kubewarden.policy.title: psp-capabilities
   io.kubewarden.policy.description: Replacement for the Kubernetes Pod Security Policy that controls the usage of capabilities
   io.kubewarden.policy.author: Flavio Castelli
-  io.kubewarden.policy.url: https://github.com/kubewarden/psp-capabilities
-  io.kubewarden.policy.source: https://github.com/kubewarden/psp-capabilities
+  io.kubewarden.policy.url: https://github.com/kubewarden/capabilities-psp-policy
+  io.kubewarden.policy.source: https://github.com/kubewarden/capabilities-psp-policy
   io.kubewarden.policy.license: Apache-2.0
   io.kubewarden.policy.usage: |
     This policy works by defining several lists of capabilities. Capabilities are specified as named in `ALL_CAPS`, but without the `CAP_` prefix.
