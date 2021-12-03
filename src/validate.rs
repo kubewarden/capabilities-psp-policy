@@ -12,7 +12,7 @@ pub(crate) fn validate_added_caps(validation_req: &ValidationRequest<Settings>) 
         "$.spec.containers[*].securityContext.capabilities.add",
         "$.spec.initContainers[*].securityContext.capabilities.add",
     ];
-    let cap_add = get_caps(&add_queries, &validation_req)?;
+    let cap_add = get_caps(&add_queries, validation_req)?;
 
     if !validation_req.settings.allow_all_capabilities_enabled() {
         let not_allowed: HashSet<String> = cap_add
