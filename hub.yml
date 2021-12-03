@@ -1,11 +1,11 @@
-name: psp-capabilities
+name: capabilities-psp
 description: A Pod Security Policy that controls Container Capabilities
 homepage: https://github.com/kubewarden/capabilities-psp-policy
 author:
   name: Kubewarden devs
   homepage: https://github.com/kubewarden
 download:
-  registry: ghcr.io/kubewarden/policies/psp-capabilities:__TAG__
+  registry: ghcr.io/kubewarden/policies/capabilities-psp:__TAG__
   url: https://github.com/kubewarden/capabilities-psp-policy/releases/download/__TAG__/policy.wasm
 keywords:
   - PSP

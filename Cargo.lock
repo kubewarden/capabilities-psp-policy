@@ -63,6 +63,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b700ce4376041dcd0a327fd0097c41095743c4c8af8887265942faf1100bd040"
 
 [[package]]
+name = "capabilities-psp"
+version = "0.1.8"
+dependencies = [
+ "anyhow",
+ "assert-json-diff",
+ "jsonpath_lib",
+ "k8s-openapi",
+ "kubewarden-policy-sdk",
+ "serde",
+ "serde_json",
+ "test_helpers",
+ "wapc-guest",
+]
+
+[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -361,21 +376,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a152013215dca273577e18d2bf00fa862b89b24169fb78c4c95aeb07992c9cec"
 dependencies = [
  "unicode-xid",
-]
-
-[[package]]
-name = "psp-capabilities"
-version = "0.1.6"
-dependencies = [
- "anyhow",
- "assert-json-diff",
- "jsonpath_lib",
- "k8s-openapi",
- "kubewarden-policy-sdk",
- "serde",
- "serde_json",
- "test_helpers",
- "wapc-guest",
 ]
 
 [[package]]

@@ -27,8 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     env:
-      WASM_BINARY_NAME: psp_capabilities
-      OCI_TARGET: ghcr.io/kubewarden/policies/psp-capabilities
+      WASM_BINARY_NAME: capabilities_psp
+      OCI_TARGET: ghcr.io/kubewarden/policies/capabilities-psp
       METADATA_FILE: metadata.yml
       KWCTL_VERSION: v0.1.9
     steps:
