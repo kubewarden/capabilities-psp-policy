@@ -57,8 +57,6 @@ fn patch_container_security_context(
     security_context: Option<SecurityContext>,
     settings: &Settings,
 ) -> Option<SecurityContext> {
-    let mut changed: bool;
-
     let mut sc = security_context.unwrap_or(SecurityContext {
         capabilities: Some(Capabilities {
             add: Some(Vec::<String>::new()),
@@ -92,7 +90,7 @@ fn patch_container_security_context(
         // flacky tests
         cap_add.sort();
     }
-    changed = cap_add_size_before != cap_add.len();
+    let mut changed = cap_add_size_before != cap_add.len();
 
     capabilities.add = Some(cap_add);
 
