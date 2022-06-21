@@ -1,5 +1,5 @@
-extern crate wapc_guest as guest;
 use guest::prelude::*;
+use kubewarden_policy_sdk::wapc_guest as guest;
 
 mod validate;
 use validate::validate_added_caps;
@@ -33,7 +33,7 @@ fn validate(payload: &[u8]) -> CallResult {
                 accept_request()
             }
         }
-        Err(val_res) => reject_request(Some(val_res.to_string()), None),
+        Err(val_res) => reject_request(Some(val_res.to_string()), None, None, None),
     }
 }
 
