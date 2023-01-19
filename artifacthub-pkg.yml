@@ -1,14 +1,14 @@
 ---
-version: 0.1.9
+version: 0.1.10
 name: capabilities-psp
 displayName: Capabilities PSP
-createdAt: '2022-07-19T15:42:51+02:00'
+createdAt: '2023-01-19T14:46:21+02:00'
 description: A Pod Security Policy that controls Container Capabilities
 license: Apache-2.0
 homeURL: https://github.com/kubewarden/capabilities-psp-policy
 containersImages:
 - name: policy
-  image: ghcr.io/kubewarden/policies/capabilities-psp:v0.1.9
+  image: ghcr.io/kubewarden/policies/capabilities-psp:v0.1.10
 keywords:
 - psp
 - container
@@ -16,7 +16,7 @@ keywords:
 - capabilities
 links:
 - name: policy
-  url: https://github.com/kubewarden/capabilities-psp-policy/releases/download/v0.1.9/policy.wasm
+  url: https://github.com/kubewarden/capabilities-psp-policy/releases/download/v0.1.10/policy.wasm
 - name: source
   url: https://github.com/kubewarden/capabilities-psp-policy
 provider:
@@ -27,3 +27,37 @@ annotations:
   kubewarden/resources: Pod
   kubewarden/mutation: true
   kubewarden/contextAware: false
+  kubewarden/rules: |
+    rules:
+    - apiGroups: [""]
+      apiVersions: ["v1"]
+      resources: ["pods"]
+      operations: ["CREATE"]
+  kubewarden/questions-ui: |
+    questions:
+    - default: [""]
+      description: Provides a list of capabilities that are allowed to be added to a container
+      tooltip: Specified as the capability name in ALL_CAPS. (e.g. `CHOWN`, `KILL`)
+      group: Settings
+      label: Allowed capabilities
+      required: false
+      type: array[
+      variable: allowed_capabilities
+    - default: [""]
+      description: The capabilities which must be dropped from containers.
+      tooltip: Specified as the capability name in ALL_CAPS. (e.g. `NET_ADMIN`)
+      group: Settings
+      label: Required drop capabilities
+      required: false
+      type: array[
+      variable: required_drop_capabilities
+    - default: [""]
+      description: >-
+        The capabilities which are added to containers by default, in addition to
+        the runtime defaults.
+      tooltip: Specified as the capability name in ALL_CAPS. (e.g. `CHOWN`)
+      group: Settings
+      label: Default add capabilities
+      required: false
+      type: array[
+      variable: default_add_capabilities
