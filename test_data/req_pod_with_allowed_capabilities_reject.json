@@ -1,0 +1,198 @@
+{
+  "dryRun": false,
+  "kind": {
+      "group": "",
+      "kind": "Pod",
+      "version": "v1"
+  },
+  "name": "hello",
+  "namespace": "default",
+  "object": {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {
+          "annotations": {
+              "io.kubewarden.policy.echo.create": "true",
+              "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{\"io.kubewarden.policy.echo.create\":\"true\"},\"name\":\"hello\",\"namespace\":\"default\"},\"spec\":{\"containers\":[{\"command\":[\"sh\",\"-c\",\"echo 'Hello!' \\u0026\\u0026 sleep 1h\"],\"image\":\"busybox\",\"name\":\"hello\",\"securityContext\":{\"capabilities\":{\"add\":[\"NET_ADMIN\"]}}}]}}\n"
+          },
+          "creationTimestamp": "2023-04-12T12:42:27Z",
+          "managedFields": [
+              {
+                  "apiVersion": "v1",
+                  "fieldsType": "FieldsV1",
+                  "fieldsV1": {
+                      "f:metadata": {
+                          "f:annotations": {
+                              ".": {},
+                              "f:io.kubewarden.policy.echo.create": {},
+                              "f:kubectl.kubernetes.io/last-applied-configuration": {}
+                          }
+                      },
+                      "f:spec": {
+                          "f:containers": {
+                              "k:{\"name\":\"hello\"}": {
+                                  ".": {},
+                                  "f:command": {},
+                                  "f:image": {},
+                                  "f:imagePullPolicy": {},
+                                  "f:name": {},
+                                  "f:resources": {},
+                                  "f:securityContext": {
+                                      ".": {},
+                                      "f:capabilities": {
+                                          ".": {},
+                                          "f:add": {}
+                                      }
+                                  },
+                                  "f:terminationMessagePath": {},
+                                  "f:terminationMessagePolicy": {}
+                              }
+                          },
+                          "f:dnsPolicy": {},
+                          "f:enableServiceLinks": {},
+                          "f:restartPolicy": {},
+                          "f:schedulerName": {},
+                          "f:securityContext": {},
+                          "f:terminationGracePeriodSeconds": {}
+                      }
+                  },
+                  "manager": "kubectl-client-side-apply",
+                  "operation": "Update",
+                  "time": "2023-04-12T12:42:27Z"
+              }
+          ],
+          "name": "hello",
+          "namespace": "default",
+          "uid": "d1dbc79a-8b52-4396-a882-a3fb8549a546"
+      },
+      "spec": {
+          "containers": [
+              {
+                  "command": [
+                      "sh",
+                      "-c",
+                      "echo 'Hello!' && sleep 1h"
+                  ],
+                  "image": "busybox",
+                  "imagePullPolicy": "Always",
+                  "name": "hello",
+                  "resources": {},
+                  "securityContext": {
+                      "capabilities": {
+                          "add": [
+                              "BPF"
+                          ]
+                      }
+                  },
+                  "terminationMessagePath": "/dev/termination-log",
+                  "terminationMessagePolicy": "File",
+                  "volumeMounts": [
+                      {
+                          "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                          "name": "kube-api-access-g4mxk",
+                          "readOnly": true
+                      }
+                  ]
+              }
+          ],
+          "dnsPolicy": "ClusterFirst",
+          "enableServiceLinks": true,
+          "preemptionPolicy": "PreemptLowerPriority",
+          "priority": 0,
+          "restartPolicy": "Always",
+          "schedulerName": "default-scheduler",
+          "securityContext": {},
+          "serviceAccount": "default",
+          "serviceAccountName": "default",
+          "terminationGracePeriodSeconds": 30,
+          "tolerations": [
+              {
+                  "effect": "NoExecute",
+                  "key": "node.kubernetes.io/not-ready",
+                  "operator": "Exists",
+                  "tolerationSeconds": 300
+              },
+              {
+                  "effect": "NoExecute",
+                  "key": "node.kubernetes.io/unreachable",
+                  "operator": "Exists",
+                  "tolerationSeconds": 300
+              }
+          ],
+          "volumes": [
+              {
+                  "name": "kube-api-access-g4mxk",
+                  "projected": {
+                      "defaultMode": 420,
+                      "sources": [
+                          {
+                              "serviceAccountToken": {
+                                  "expirationSeconds": 3607,
+                                  "path": "token"
+                              }
+                          },
+                          {
+                              "configMap": {
+                                  "items": [
+                                      {
+                                          "key": "ca.crt",
+                                          "path": "ca.crt"
+                                      }
+                                  ],
+                                  "name": "kube-root-ca.crt"
+                              }
+                          },
+                          {
+                              "downwardAPI": {
+                                  "items": [
+                                      {
+                                          "fieldRef": {
+                                              "apiVersion": "v1",
+                                              "fieldPath": "metadata.namespace"
+                                          },
+                                          "path": "namespace"
+                                      }
+                                  ]
+                              }
+                          }
+                      ]
+                  }
+              }
+          ]
+      },
+      "status": {
+          "phase": "Pending",
+          "qosClass": "BestEffort"
+      }
+  },
+  "operation": "CREATE",
+  "options": {
+      "apiVersion": "meta.k8s.io/v1",
+      "fieldManager": "kubectl-client-side-apply",
+      "fieldValidation": "Strict",
+      "kind": "CreateOptions"
+  },
+  "requestKind": {
+      "group": "",
+      "kind": "Pod",
+      "version": "v1"
+  },
+  "requestResource": {
+      "group": "",
+      "resource": "pods",
+      "version": "v1"
+  },
+  "resource": {
+      "group": "",
+      "resource": "pods",
+      "version": "v1"
+  },
+  "uid": "f0b8fba3-4f4f-465b-af8c-84d0326a2dc2",
+  "userInfo": {
+      "groups": [
+          "system:masters",
+          "system:authenticated"
+      ],
+      "username": "docker-for-desktop"
+  }
+}
