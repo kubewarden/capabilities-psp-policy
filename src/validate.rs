@@ -36,7 +36,7 @@ pub(crate) fn validate_added_caps(validation_req: &ValidationRequest<Settings>) 
 
     if !must_be_dropped.is_empty() {
         return Err(anyhow!(
-            "PSP capabilities policies doesn't allow these capabilities to be added because they are no the `required_drop_capabilities` list: {:?}",
+            "PSP capabilities policies doesn't allow these capabilities to be added because they are on the `required_drop_capabilities` list: {:?}",
             must_be_dropped
         ));
     }
