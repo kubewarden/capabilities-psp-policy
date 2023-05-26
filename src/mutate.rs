@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result};
-use k8s_openapi::api::core::v1::{Capabilities, Pod, SecurityContext};
+use k8s_openapi::api::core::v1::{Capabilities, PodSpec, SecurityContext};
 use kubewarden_policy_sdk::request::ValidationRequest;
 use std::collections::HashSet;
 
@@ -8,14 +8,18 @@ use crate::settings::Settings;
 pub(crate) fn patch_object(
     validation_req: &ValidationRequest<Settings>,
 ) -> Result<Option<serde_json::Value>> {
-    let mut pod: Pod = serde_json::from_value(validation_req.request.object.clone())
+    let pod_spec_option = validation_req
+        .extract_pod_spec_from_object()
         .map_err(|e| anyhow!("Error deserializing Pod specification: {:?}", e))?;
-    let mut changed = false;
 
-    if pod.spec.is_none() {
-        return Ok(None);
+    let mut pod_spec: PodSpec;
+    if let Some(pod_spec_immut) = pod_spec_option {
+        pod_spec = pod_spec_immut;
+    } else {
+        return Ok(Some(validation_req.request.object.clone()));
     }
-    let mut pod_spec = pod.spec.unwrap();
+
+    let mut changed = false;
 
     for mut c in pod_spec.containers.iter_mut() {
         let sc =
@@ -41,13 +45,10 @@ pub(crate) fn patch_object(
         pod_spec.init_containers = Some(init_containers);
     }
 
-    pod.spec = Some(pod_spec);
-
     if changed {
-        match serde_json::to_value(pod) {
-            Ok(v) => Ok(Some(v)),
-            Err(e) => Err(anyhow!("Error serializing modified Pod: {:?}", e)),
-        }
+        serde_json::to_value(pod_spec)
+            .map(Some)
+            .map_err(|e| anyhow!("Error serializing modified Pod: {:?}", e.to_string()))
     } else {
         Ok(None)
     }
@@ -132,13 +133,72 @@ mod tests {
 
     use test_helpers::configuration;
 
-    fn test_mutate(payload: serde_json::Value, expected: serde_json::Value) -> Result<()> {
+    fn test_mutate(payload: serde_json::Value, expected_pod_spec: serde_json::Value) -> Result<()> {
         let validation_req = ValidationRequest::<Settings>::new(payload.to_string().as_bytes())?;
         let mutated = patch_object(&validation_req)?;
 
-        assert_json_eq!(mutated, expected);
+        assert_json_eq!(mutated, expected_pod_spec);
 
         Ok(())
+    }
+
+    #[test]
+    fn extend_existing_add_capabilities_for_deployment() -> Result<()> {
+        let settings = configuration!(
+            allowed_capabilities: "NET_ADMIN,SYS_TIME,KILL",
+            required_drop_capabilities: "",
+            default_add_capabilities: "SYS_TIME,KILL"
+        );
+
+        let payload = json!({
+            "settings": json!(settings),
+            "request": {
+                "kind": {
+                    "kind": "Deployment"
+                },
+                "object": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "metadata": {
+                       "name": "security-context-demo-4"
+                    },
+                    "spec": {
+                        "template": {
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "name": "sec-ctx-4",
+                                        "image": "gcr.io/google-samples/node-hello:1.0",
+                                        "securityContext": {
+                                            "capabilities": {
+                                                "add": ["NET_ADMIN", "SYS_TIME"]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        let expected_pod_spec = json!({
+               "containers": [
+                    {
+                        "name": "sec-ctx-4",
+                        "image": "gcr.io/google-samples/node-hello:1.0",
+                        "securityContext": {
+                           "capabilities": {
+                              "add": ["KILL", "NET_ADMIN", "SYS_TIME"],
+                              "drop": []
+                           }
+                        }
+                    }
+               ]
+        });
+
+        test_mutate(payload, expected_pod_spec)
     }
 
     #[test]
@@ -152,6 +212,9 @@ mod tests {
         let payload = json!({
             "settings": json!(settings),
             "request": {
+                "kind": {
+                    "kind": "Pod"
+                },
                 "object": {
                     "apiVersion": "v1",
                     "kind": "Pod",
@@ -175,13 +238,7 @@ mod tests {
             }
         });
 
-        let expected = json!({
-            "apiVersion": "v1",
-            "kind": "Pod",
-            "metadata": {
-               "name": "security-context-demo-4"
-            },
-            "spec": {
+        let expected_pod_spec = json!({
                "containers": [
                     {
                         "name": "sec-ctx-4",
@@ -194,10 +251,9 @@ mod tests {
                         }
                     }
                ]
-            }
         });
 
-        test_mutate(payload, expected)
+        test_mutate(payload, expected_pod_spec)
     }
 
     #[test]
@@ -211,6 +267,9 @@ mod tests {
         let payload = json!({
             "settings": json!(settings),
             "request": {
+                "kind": {
+                    "kind": "Pod"
+                },
                 "object": {
                     "apiVersion": "v1",
                     "kind": "Pod",
@@ -234,13 +293,7 @@ mod tests {
             }
         });
 
-        let expected = json!({
-            "apiVersion": "v1",
-            "kind": "Pod",
-            "metadata": {
-               "name": "security-context-demo-4"
-            },
-            "spec": {
+        let expected_pod_spec = json!({
                "containers": [
                     {
                         "name": "sec-ctx-4",
@@ -253,10 +306,9 @@ mod tests {
                         }
                     }
                ]
-            }
         });
 
-        test_mutate(payload, expected)
+        test_mutate(payload, expected_pod_spec)
     }
 
     #[test]
@@ -270,6 +322,9 @@ mod tests {
         let payload = json!({
             "settings": json!(settings),
             "request": {
+                "kind": {
+                    "kind": "Pod"
+                },
                 "object": {
                     "apiVersion": "v1",
                     "kind": "Pod",
@@ -288,13 +343,7 @@ mod tests {
             }
         });
 
-        let expected = json!({
-            "apiVersion": "v1",
-            "kind": "Pod",
-            "metadata": {
-               "name": "security-context-demo-4"
-            },
-            "spec": {
+        let expected_pod_spec = json!({
                "containers": [
                     {
                         "name": "sec-ctx-4",
@@ -307,10 +356,9 @@ mod tests {
                         }
                     }
                ]
-            }
         });
 
-        test_mutate(payload, expected)
+        test_mutate(payload, expected_pod_spec)
     }
 
     #[test]
@@ -324,6 +372,9 @@ mod tests {
         let payload = json!({
             "settings": json!(settings),
             "request": {
+                "kind": {
+                    "kind": "Pod"
+                },
                 "object": {
                     "apiVersion": "v1",
                     "kind": "Pod",
@@ -345,13 +396,7 @@ mod tests {
             }
         });
 
-        let expected = json!({
-            "apiVersion": "v1",
-            "kind": "Pod",
-            "metadata": {
-               "name": "security-context-demo-4"
-            },
-            "spec": {
+        let expected_pod_spec = json!({
                "containers": [
                     {
                         "name": "sec-ctx-4",
@@ -365,10 +410,9 @@ mod tests {
                         }
                     }
                ]
-            }
         });
 
-        test_mutate(payload, expected)
+        test_mutate(payload, expected_pod_spec)
     }
 
     #[test]
@@ -382,6 +426,9 @@ mod tests {
         let payload = json!({
             "settings": json!(settings),
             "request": {
+                "kind": {
+                    "kind": "Pod"
+                },
                 "object": {
                     "apiVersion": "v1",
                     "kind": "Pod",
@@ -412,13 +459,7 @@ mod tests {
             }
         });
 
-        let expected = json!({
-            "apiVersion": "v1",
-            "kind": "Pod",
-            "metadata": {
-               "name": "security-context-demo-4"
-            },
-            "spec": {
+        let expected_pod_spec = json!({
                "containers": [
                     {
                         "name": "sec-ctx-4",
@@ -445,10 +486,8 @@ mod tests {
 
                    }
                ]
-
-            }
         });
 
-        test_mutate(payload, expected)
+        test_mutate(payload, expected_pod_spec)
     }
 }

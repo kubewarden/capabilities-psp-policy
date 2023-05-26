@@ -1,0 +1,53 @@
+{
+    "uid": "f0b8fba3-4f4f-465b-af8c-84d0326a2dc2",
+    "kind": {
+        "group": "apps",
+        "version": "v1",
+        "kind": "Deployment"
+    },
+    "object": {
+        "metadata": {
+            "name": "hello"
+        },
+        "spec": {
+            "template": {
+                "spec": {
+                    "containers": [
+                        {
+                            "command": [
+                                "sh",
+                                "-c",
+                                "echo 'Hello!' && sleep 1h"
+                            ],
+                            "image": "busybox",
+                            "imagePullPolicy": "Always",
+                            "name": "hello",
+                            "resources": {},
+                            "securityContext": {
+                                "capabilities": {
+                                    "add": [
+                                        "KILL"
+                                    ]
+                                }
+                            }
+                            
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "operation": "CREATE",
+    "requestKind": {
+        "group": "apps",
+        "version": "v1",
+        "kind": "Deployment"
+    },
+    "userInfo": {
+        "groups": [
+            "system:masters",
+            "system:authenticated"
+        ],
+        "username": "kemara"
+    }
+}
