@@ -4,16 +4,16 @@
 #
 # This config can be saved to its default location with:
 #   kwctl scaffold artifacthub > artifacthub-pkg.yml 
-version: 0.1.11
+version: 0.1.12
 name: capabilities-psp
 displayName: Capabilities PSP
-createdAt: 2023-03-21T12:44:32.93498724Z
+createdAt: 2023-05-26T16:10:04.540163992Z
 description: Replacement for the Kubernetes Pod Security Policy that controls the usage of capabilities
 license: Apache-2.0
 homeURL: https://github.com/kubewarden/capabilities-psp-policy
 containersImages:
 - name: policy
-  image: ghcr.io/kubewarden/policies/capabilities-psp:v0.1.11
+  image: ghcr.io/kubewarden/policies/capabilities-psp:v0.1.12
 keywords:
 - psp
 - container
@@ -21,13 +21,13 @@ keywords:
 - capabilities
 links:
 - name: policy
-  url: https://github.com/kubewarden/capabilities-psp-policy/releases/download/v0.1.11/policy.wasm
+  url: https://github.com/kubewarden/capabilities-psp-policy/releases/download/v0.1.12/policy.wasm
 - name: source
   url: https://github.com/kubewarden/capabilities-psp-policy
 install: |
   The policy can be obtained using [`kwctl`](https://github.com/kubewarden/kwctl):
   ```console
-  kwctl pull ghcr.io/kubewarden/policies/capabilities-psp:v0.1.11
+  kwctl pull ghcr.io/kubewarden/policies/capabilities-psp:v0.1.12
   ```
 maintainers:
 - name: Kubewarden developers
@@ -66,7 +66,15 @@ annotations:
       required: false
       type: array[
       variable: default_add_capabilities
-  kubewarden/resources: Pod
+  kubewarden/resources: |
+    - Pod
+    - Deployment
+    - ReplicaSet
+    - StatefulSet
+    - DaemonSet
+    - Job
+    - CronJob
+    - ReplicationController
   kubewarden/rules: |
     - apiGroups:
       - ''
@@ -74,5 +82,12 @@ annotations:
       - v1
       resources:
       - pods
+      - deployments
+      - replicasets
+      - statefulsets
+      - daemonsets
+      - jobs
+      - cronjobs
+      - replicationcontrollers
       operations:
       - CREATE

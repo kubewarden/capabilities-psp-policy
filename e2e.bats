@@ -40,10 +40,15 @@
   [ $(expr "$output" : '.*"message":"PSP capabilities policies doesn'\''t allow these capabilities to be added*') -ne 0 ]
 }
 
-
-
 @test "Mutate pods" {
   run kwctl run  --request-path test_data/req_pod_with_mutate_capabilities.json --settings-json '{"allowed_capabilities": ["CHOWN", "KILL"], "required_drop_capabilities":["NET_ADMIN"], "default_add_capabilities":["CHOWN"]}' annotated-policy.wasm
+  echo "$output"
+  [ $(expr "$output" : '.*"allowed":true.*') -ne 0 ]
+  [ $(expr "$output" : '.*"patchType":"JSONPatch"') -ne 0 ]
+}
+
+@test "Mutate deployments" {
+  run kwctl run  --request-path test_data/req_pod_with_mutate_capabilities_for_deployment.json --settings-json '{"allowed_capabilities": ["CHOWN", "KILL"], "required_drop_capabilities":["NET_ADMIN"], "default_add_capabilities":["CHOWN"]}' annotated-policy.wasm
   echo "$output"
   [ $(expr "$output" : '.*"allowed":true.*') -ne 0 ]
   [ $(expr "$output" : '.*"patchType":"JSONPatch"') -ne 0 ]

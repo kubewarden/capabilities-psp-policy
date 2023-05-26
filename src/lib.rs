@@ -1,5 +1,6 @@
 use guest::prelude::*;
-use kubewarden_policy_sdk::wapc_guest as guest;
+use k8s_openapi::api::core::v1::PodSpec;
+use kubewarden_policy_sdk::{mutate_pod_spec_from_request, wapc_guest as guest};
 
 mod validate;
 use validate::validate_added_caps;
@@ -11,8 +12,8 @@ mod settings;
 use settings::Settings;
 
 use kubewarden_policy_sdk::{
-    accept_request, mutate_request, protocol_version_guest, reject_request,
-    request::ValidationRequest, validate_settings,
+    accept_request, protocol_version_guest, reject_request, request::ValidationRequest,
+    validate_settings,
 };
 
 #[no_mangle]
@@ -27,8 +28,9 @@ fn validate(payload: &[u8]) -> CallResult {
 
     match validate_added_caps(&validation_req) {
         Ok(()) => {
-            if let Some(patched_object) = patch_object(&validation_req)? {
-                mutate_request(patched_object)
+            if let Some(patched_pod_spec) = patch_object(&validation_req)? {
+                let pod_spec = serde_json::from_value::<PodSpec>(patched_pod_spec)?;
+                mutate_pod_spec_from_request(validation_req, pod_spec)
             } else {
                 accept_request()
             }
@@ -50,6 +52,8 @@ mod tests {
         // this request has NET_ADMIN and SYS_TIME already added. SYS_PTRACE is
         // already dropped
         let request_file = "test_data/req_pod_with_container_with_capabilities_added.json";
+        let request_file_for_deployment =
+            "test_data/req_pod_with_container_with_capabilities_added_for_deployment.json";
         let tests = vec![
             Testcase {
                 name: String::from("Nothing to add"),
@@ -63,6 +67,15 @@ mod tests {
             Testcase {
                 name: String::from("Caps already added"),
                 fixture_file: String::from(request_file),
+                settings: configuration!(
+                allowed_capabilities: "NET_ADMIN,SYS_TIME,KILL",
+                required_drop_capabilities: "",
+                default_add_capabilities: "NET_ADMIN,SYS_TIME"),
+                expected_validation_result: true,
+            },
+            Testcase {
+                name: String::from("Caps already added in Deployment"),
+                fixture_file: String::from(request_file_for_deployment),
                 settings: configuration!(
                 allowed_capabilities: "NET_ADMIN,SYS_TIME,KILL",
                 required_drop_capabilities: "",

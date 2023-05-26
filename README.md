@@ -4,6 +4,9 @@ that controls the usage of Containers capabilities:
   * [Deprecated PSP](https://kubernetes.io/docs/concepts/policy/pod-security-policy/#capabilities)
   * [Kubernetes container capabilities feature](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-capabilities-for-a-container)
 
+This policy can validate/mutate either containers and init containers, but it
+doesn't work for ephemeral containers.
+
 # How the policy works
 
 The following fields take a list of capabilities, specified as the capability

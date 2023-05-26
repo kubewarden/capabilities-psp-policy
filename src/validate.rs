@@ -1,18 +1,22 @@
 use anyhow::{anyhow, Result};
+use k8s_openapi::api::core::v1::PodSpec;
 use std::collections::HashSet;
 
 use crate::settings::Settings;
 
-use jsonpath_lib as jsonpath;
-
 use kubewarden_policy_sdk::request::ValidationRequest;
 
 pub(crate) fn validate_added_caps(validation_req: &ValidationRequest<Settings>) -> Result<()> {
-    let add_queries = vec![
-        "$.spec.containers[*].securityContext.capabilities.add",
-        "$.spec.initContainers[*].securityContext.capabilities.add",
-    ];
-    let cap_add = get_caps(&add_queries, validation_req)?;
+    let pod_spec = validation_req
+        .extract_pod_spec_from_object()
+        .map_err(|e| anyhow!("Error deserializing Pod specification: {:?}", e))?;
+
+    let cap_add;
+    if let Some(pod_spec) = pod_spec {
+        cap_add = get_caps(&pod_spec)?;
+    } else {
+        return Ok(());
+    }
 
     if !validation_req.settings.allow_all_capabilities_enabled() {
         let not_allowed: HashSet<String> = cap_add
@@ -44,20 +48,33 @@ pub(crate) fn validate_added_caps(validation_req: &ValidationRequest<Settings>) 
     Ok(())
 }
 
-fn get_caps(
-    queries: &[&str],
-    validation_req: &ValidationRequest<Settings>,
-) -> Result<HashSet<String>> {
-    let mut selector = jsonpath::selector_as::<HashSet<String>>(&validation_req.request.object);
-
+fn get_caps(pod_spec: &PodSpec) -> Result<HashSet<String>> {
     let mut caps = HashSet::<String>::new();
 
-    for q in queries.iter() {
-        let matches = selector(q)
-            .map(|mut m| m.pop().unwrap_or_default())
-            .map_err(|e| anyhow!("error searching capabilities with query {}: {:?}", q, e))?;
+    for c in pod_spec.containers.iter() {
+        if let Some(sc) = &c.security_context {
+            if let Some(capabilities) = &sc.capabilities {
+                if let Some(add) = &capabilities.add {
+                    add.iter().for_each(|c| {
+                        caps.insert(c.to_owned());
+                    });
+                }
+            }
+        }
+    }
 
-        caps = caps.union(&matches).map(|i| i.to_owned()).collect();
+    if let Some(ics) = &pod_spec.init_containers {
+        for c in ics.iter() {
+            if let Some(sc) = &c.security_context {
+                if let Some(capabilities) = &sc.capabilities {
+                    if let Some(add) = &capabilities.add {
+                        add.iter().for_each(|c| {
+                            caps.insert(c.to_owned());
+                        });
+                    }
+                }
+            }
+        }
     }
 
     Ok(caps)
@@ -72,6 +89,59 @@ mod tests {
     use test_helpers::configuration;
 
     #[test]
+    fn allow_only_container_runtime_default_capabilities_for_deployment() -> Result<()> {
+        let settings = configuration!(
+            allowed_capabilities: "",
+            required_drop_capabilities: "",
+            default_add_capabilities: ""
+        );
+
+        let payload = json!({
+            "settings": json!(settings),
+            "request": {
+                "kind": {
+                    "kind": "Deployment"
+                },
+                "object": {
+                    "apiVersion": "apps/v1",
+                    "kind": "Deployment",
+                    "metadata": {
+                       "name": "security-context-demo-4"
+                    },
+                    "spec": {
+                        "template": {
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "name": "sec-ctx-4",
+                                        "image": "gcr.io/google-samples/node-hello:1.0",
+                                        "securityContext": {
+                                           "capabilities": {
+                                              "add": ["NET_ADMIN", "SYS_TIME"]
+                                           }
+                                        }
+                                    }
+                               ]
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        let validation_req = ValidationRequest::<Settings>::new(payload.to_string().as_bytes())?;
+        let validation_result = validate_added_caps(&validation_req);
+        assert!(validation_result.is_err());
+
+        let vr = validation_result.unwrap_err().to_string();
+        for c in vec!["NET_ADMIN", "SYS_TIME"].iter() {
+            assert!(vr.contains(c));
+        }
+
+        Ok(())
+    }
+
+    #[test]
     fn allow_only_container_runtime_default_capabilities() -> Result<()> {
         let settings = configuration!(
             allowed_capabilities: "",
@@ -82,6 +152,9 @@ mod tests {
         let payload = json!({
             "settings": json!(settings),
             "request": {
+                "kind": {
+                    "kind": "Pod"
+                },
                 "object": {
                     "apiVersion": "v1",
                     "kind": "Pod",
@@ -128,6 +201,9 @@ mod tests {
         let payload = json!({
             "settings": json!(settings),
             "request": {
+                "kind": {
+                    "kind": "Pod"
+                },
                 "object": {
                     "apiVersion": "v1",
                     "kind": "Pod",
@@ -173,6 +249,9 @@ mod tests {
         let payload = json!({
             "settings": json!(settings),
             "request": {
+                "kind": {
+                    "kind": "Pod"
+                },
                 "object": {
                     "apiVersion": "v1",
                     "kind": "Pod",
@@ -236,6 +315,9 @@ mod tests {
         let payload = json!({
             "settings": json!(settings),
             "request": {
+                "kind": {
+                    "kind": "Pod"
+                },
                 "object": {
                     "apiVersion": "v1",
                     "kind": "Pod",

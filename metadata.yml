@@ -1,14 +1,22 @@
 rules:
 - apiGroups: [""]
   apiVersions: ["v1"]
-  resources: ["pods"]
+  resources: ["pods", "deployments", "replicasets", "statefulsets", "daemonsets", "jobs", "cronjobs", "replicationcontrollers"]
   operations: ["CREATE"]
 mutating: true
 contextAware: false
 annotations:
   # artifacthub specific
   io.artifacthub.displayName: Capabilities PSP
-  io.artifacthub.resources: Pod
+  io.artifacthub.resources: |
+    - Pod
+    - Deployment
+    - ReplicaSet
+    - StatefulSet
+    - DaemonSet
+    - Job
+    - CronJob
+    - ReplicationController
   io.artifacthub.keywords: psp, container, capability, capabilities
   io.kubewarden.policy.ociUrl: ghcr.io/kubewarden/policies/capabilities-psp
   # rest
