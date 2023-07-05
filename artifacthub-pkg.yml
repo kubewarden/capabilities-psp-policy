@@ -7,7 +7,7 @@
 version: 0.1.12
 name: capabilities-psp
 displayName: Capabilities PSP
-createdAt: 2023-05-26T16:10:04.540163992Z
+createdAt: 2023-07-07T13:35:13.855849131Z
 description: Replacement for the Kubernetes Pod Security Policy that controls the usage of capabilities
 license: Apache-2.0
 homeURL: https://github.com/kubewarden/capabilities-psp-policy
@@ -66,15 +66,7 @@ annotations:
       required: false
       type: array[
       variable: default_add_capabilities
-  kubewarden/resources: |
-    - Pod
-    - Deployment
-    - ReplicaSet
-    - StatefulSet
-    - DaemonSet
-    - Job
-    - CronJob
-    - ReplicationController
+  kubewarden/resources: Pod,Deployment,ReplicaSet,StatefulSet,DaemonSet,Job,CronJob,ReplicationController
   kubewarden/rules: |
     - apiGroups:
       - ''

@@ -1,28 +1,34 @@
 rules:
-- apiGroups: [""]
-  apiVersions: ["v1"]
-  resources: ["pods", "deployments", "replicasets", "statefulsets", "daemonsets", "jobs", "cronjobs", "replicationcontrollers"]
-  operations: ["CREATE"]
+  - apiGroups:
+      - ''
+    apiVersions:
+      - v1
+    resources:
+      - pods
+      - deployments
+      - replicasets
+      - statefulsets
+      - daemonsets
+      - jobs
+      - cronjobs
+      - replicationcontrollers
+    operations:
+      - CREATE
 mutating: true
 contextAware: false
 annotations:
   # artifacthub specific
   io.artifacthub.displayName: Capabilities PSP
-  io.artifacthub.resources: |
-    - Pod
-    - Deployment
-    - ReplicaSet
-    - StatefulSet
-    - DaemonSet
-    - Job
-    - CronJob
-    - ReplicationController
+  io.artifacthub.resources: Pod,Deployment,ReplicaSet,StatefulSet,DaemonSet,Job,CronJob,ReplicationController
   io.artifacthub.keywords: psp, container, capability, capabilities
+  # kubewarden specific
   io.kubewarden.policy.ociUrl: ghcr.io/kubewarden/policies/capabilities-psp
-  # rest
   io.kubewarden.policy.title: capabilities-psp
-  io.kubewarden.policy.description: Replacement for the Kubernetes Pod Security Policy that controls the usage of capabilities
-  io.kubewarden.policy.author: "Kubewarden developers <cncf-kubewarden-maintainers@lists.cncf.io>"
+  io.kubewarden.policy.description: Replacement for the Kubernetes Pod Security Policy
+    that controls the usage of capabilities
+  io.kubewarden.policy.author: Kubewarden developers <cncf-kubewarden-maintainers@lists.cncf.io>
   io.kubewarden.policy.url: https://github.com/kubewarden/capabilities-psp-policy
   io.kubewarden.policy.source: https://github.com/kubewarden/capabilities-psp-policy
   io.kubewarden.policy.license: Apache-2.0
+  io.kubewarden.policy.category: PSP
+  io.kubewarden.policy.severity: medium
