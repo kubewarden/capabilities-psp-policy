@@ -4,16 +4,16 @@
 #
 # This config can be saved to its default location with:
 #   kwctl scaffold artifacthub > artifacthub-pkg.yml 
-version: 0.1.12
+version: 0.1.13
 name: capabilities-psp
 displayName: Capabilities PSP
-createdAt: 2023-07-07T13:35:13.855849131Z
+createdAt: 2023-07-07T16:45:50.554503861Z
 description: Replacement for the Kubernetes Pod Security Policy that controls the usage of capabilities
 license: Apache-2.0
 homeURL: https://github.com/kubewarden/capabilities-psp-policy
 containersImages:
 - name: policy
-  image: ghcr.io/kubewarden/policies/capabilities-psp:v0.1.12
+  image: ghcr.io/kubewarden/policies/capabilities-psp:v0.1.13
 keywords:
 - psp
 - container
@@ -21,13 +21,13 @@ keywords:
 - capabilities
 links:
 - name: policy
-  url: https://github.com/kubewarden/capabilities-psp-policy/releases/download/v0.1.12/policy.wasm
+  url: https://github.com/kubewarden/capabilities-psp-policy/releases/download/v0.1.13/policy.wasm
 - name: source
   url: https://github.com/kubewarden/capabilities-psp-policy
 install: |
   The policy can be obtained using [`kwctl`](https://github.com/kubewarden/kwctl):
   ```console
-  kwctl pull ghcr.io/kubewarden/policies/capabilities-psp:v0.1.12
+  kwctl pull ghcr.io/kubewarden/policies/capabilities-psp:v0.1.13
   ```
 maintainers:
 - name: Kubewarden developers
