@@ -21,7 +21,7 @@ pub(crate) fn patch_object(
 
     let mut changed = false;
 
-    for mut c in pod_spec.containers.iter_mut() {
+    for c in pod_spec.containers.iter_mut() {
         let sc =
             patch_container_security_context(c.security_context.clone(), &validation_req.settings);
         if sc.is_some() {
@@ -32,7 +32,7 @@ pub(crate) fn patch_object(
 
     if pod_spec.init_containers.is_some() {
         let mut init_containers = pod_spec.init_containers.clone().unwrap();
-        for mut c in init_containers.iter_mut() {
+        for c in init_containers.iter_mut() {
             let sc = patch_container_security_context(
                 c.security_context.clone(),
                 &validation_req.settings,
