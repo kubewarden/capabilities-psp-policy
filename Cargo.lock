@@ -44,7 +44,7 @@ checksum = "a2bd12c1caf447e69cd4528f47f94d203fd2582878ecb9e9465484c4148a8223"
 
 [[package]]
 name = "capabilities-psp"
-version = "0.1.13"
+version = "0.1.14"
 dependencies = [
  "anyhow",
  "assert-json-diff",
