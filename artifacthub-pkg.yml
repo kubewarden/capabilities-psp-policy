@@ -78,12 +78,34 @@ annotations:
       - v1
       resources:
       - pods
+      operations:
+      - CREATE
+    - apiGroups:
+      - ''
+      apiVersions:
+      - v1
+      resources:
+      - replicationcontrollers
+      operations:
+      - CREATE
+      - UPDATE
+    - apiGroups:
+      - apps
+      apiVersions:
+      - v1
+      resources:
       - deployments
       - replicasets
       - statefulsets
       - daemonsets
+      operations:
+      - CREATE
+    - apiGroups:
+      - batch
+      apiVersions:
+      - v1
+      resources:
       - jobs
       - cronjobs
-      - replicationcontrollers
       operations:
       - CREATE
