@@ -4,16 +4,16 @@
 #
 # This config can be saved to its default location with:
 #   kwctl scaffold artifacthub > artifacthub-pkg.yml 
-version: 0.1.14
+version: 0.1.15
 name: capabilities-psp
 displayName: Capabilities PSP
-createdAt: 2023-11-29T15:59:18.74914057Z
+createdAt: 2024-01-16T13:13:41.907494337Z
 description: Replacement for the Kubernetes Pod Security Policy that controls the usage of capabilities
 license: Apache-2.0
 homeURL: https://github.com/kubewarden/capabilities-psp-policy
 containersImages:
 - name: policy
-  image: ghcr.io/kubewarden/policies/capabilities-psp:v0.1.14
+  image: ghcr.io/kubewarden/policies/capabilities-psp:v0.1.15
 keywords:
 - psp
 - container
@@ -21,17 +21,17 @@ keywords:
 - capabilities
 links:
 - name: policy
-  url: https://github.com/kubewarden/capabilities-psp-policy/releases/download/v0.1.14/policy.wasm
+  url: https://github.com/kubewarden/capabilities-psp-policy/releases/download/v0.1.15/policy.wasm
 - name: source
   url: https://github.com/kubewarden/capabilities-psp-policy
 install: |
   The policy can be obtained using [`kwctl`](https://github.com/kubewarden/kwctl):
   ```console
-  kwctl pull ghcr.io/kubewarden/policies/capabilities-psp:v0.1.14
+  kwctl pull ghcr.io/kubewarden/policies/capabilities-psp:v0.1.15
   ```
   Then, generate the policy manifest and tune it to your liking. For example:
   ```console
-  kwctl scaffold manifest -t ClusterAdmissionPolicy registry://ghcr.io/kubewarden/policies/capabilities-psp:v0.1.14
+  kwctl scaffold manifest -t ClusterAdmissionPolicy registry://ghcr.io/kubewarden/policies/capabilities-psp:v0.1.15
   ```
 maintainers:
 - name: Kubewarden developers
