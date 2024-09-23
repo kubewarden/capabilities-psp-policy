@@ -63,16 +63,7 @@ fn patch_container_security_context(
             add: Some(Vec::<String>::new()),
             drop: Some(Vec::<String>::new()),
         }),
-        allow_privilege_escalation: None,
-        privileged: None,
-        proc_mount: None,
-        read_only_root_filesystem: None,
-        run_as_group: None,
-        run_as_non_root: None,
-        run_as_user: None,
-        se_linux_options: None,
-        seccomp_profile: None,
-        windows_options: None,
+        ..Default::default()
     });
 
     let mut capabilities = sc.capabilities.unwrap_or_default();
