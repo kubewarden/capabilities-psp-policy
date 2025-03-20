@@ -46,6 +46,7 @@ annotations:
   # kubewarden specific
   io.kubewarden.policy.ociUrl: ghcr.io/kubewarden/policies/capabilities-psp
   io.kubewarden.policy.title: capabilities-psp
+  io.kubewarden.policy.version: 0.1.16
   io.kubewarden.policy.description:
     Replacement for the Kubernetes Pod Security Policy
     that controls the usage of capabilities
