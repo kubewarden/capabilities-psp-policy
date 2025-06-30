@@ -27,7 +27,7 @@ impl kubewarden_policy_sdk::settings::Validatable for Settings {
             .cloned()
             .collect();
         if !denied.is_empty() {
-            return Err(format!("These capabilities cannot be allowed because they are also required to be dropped: {:?}", denied));
+            return Err(format!("These capabilities cannot be allowed because they are also required to be dropped: {denied:?}"));
         }
 
         let denied: HashSet<String> = self
@@ -36,7 +36,7 @@ impl kubewarden_policy_sdk::settings::Validatable for Settings {
             .cloned()
             .collect();
         if !denied.is_empty() {
-            return Err(format!("These capabilities cannot be added by default because they are also required to be dropped: {:?}", denied));
+            return Err(format!("These capabilities cannot be added by default because they are also required to be dropped: {denied:?}"));
         }
 
         let denied: HashSet<String> = self
@@ -46,8 +46,7 @@ impl kubewarden_policy_sdk::settings::Validatable for Settings {
             .collect();
         if !denied.is_empty() && !self.allow_all_capabilities_enabled() {
             return Err(format!(
-                "These capabilities cannot be added by default because they are not allowed: {:?}",
-                denied
+                "These capabilities cannot be added by default because they are not allowed: {denied:?}"
             ));
         }
 
